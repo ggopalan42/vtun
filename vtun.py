@@ -80,3 +80,19 @@ print "Starting vtund on client"
 ret = cmd2.run("vtund -f aws.client cobra " + private_ip_address1 )
 print ret
 
+# Sleep for a bit so tunnels can get setup
+time.sleep(2)
+
+# Add lo:1 interface to server
+ret=cmd1.run("""ifconfig lo:1 192.168.10.1 netmask 255.255.255.255 up""")
+print ret
+ret=cmd1.run("""route add -host 192.168.10.2 tun0""")
+print ret
+
+# Add lo:1 interface to client
+ret=cmd2.run("""ifconfig lo:1 192.168.10.2 netmask 255.255.255.255 up""")
+print ret
+ret=cmd2.run("""route add -host 192.168.10.1 tun0""")
+print ret
+
+
